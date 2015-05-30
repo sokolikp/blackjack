@@ -8,14 +8,15 @@ class window.Hand extends Backbone.Collection
   winBustedMessage: ''
 
   hit: ->
-    # @isBusted()
-    # @is21()
     if @isDealer
       if(@scores()[1] < 17 or (@scores()[1] > 21 and @scores()[0] < 17))
-        # console.log('I\'m hitting and my score is: ', @scores())
         newCard = @deck.pop()
         @add(newCard)
-        if not @isBusted()
+        if @isBusted()
+          @trigger 'busted', @
+        else if @is21()
+          @trigger 'twenty-one', @
+        else
           @hit()
       else
         @trigger 'game-over', @
@@ -23,10 +24,10 @@ class window.Hand extends Backbone.Collection
       # console.log('Im hitting and my dealer flag is: ', @isDealer)
       newCard = @deck.pop()
       @add(newCard)
-      @isBusted()
-        # @trigger 'busted', @
-      @is21()
-        # @trigger 'twenty-one', @
+      if @isBusted()
+        @trigger 'busted', @
+      if @is21()
+        @trigger 'twenty-one', @
 
   stand: ->
     @stands++
@@ -55,7 +56,6 @@ class window.Hand extends Backbone.Collection
   isBusted: ->
     if @scores()[0] > 21
       # console.log @winBustedMessage
-      @trigger 'busted', @
       @winBustedMessage = ' Busted!!1'
       true
     else
@@ -64,7 +64,6 @@ class window.Hand extends Backbone.Collection
   is21: ->
     if @scores()[0] == 21 or @scores[1] == 21
       # console.log("I'm 21!")
-      @trigger 'twenty-one', @
       @winBustedMessage = ' Twenty-One!'
       true
     else

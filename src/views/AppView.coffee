@@ -7,6 +7,7 @@ class window.AppView extends Backbone.View
       <div class="win-count"></div>
       <div class="loss-count"></div>
     </div>
+    <h2 class="game-message"></h2>
     <div class="player-hand-container"></div>
     <div class="dealer-hand-container"></div>
   '
@@ -18,7 +19,9 @@ class window.AppView extends Backbone.View
     'click .stand-button': ->
       if(not @model.get('playerHand').isBusted() and not @model.get('playerHand').is21())
         @model.get('playerHand').stand()
-    'click .new-game-button': -> @model.newGame()
+    'click .new-game-button': ->
+      @model.newGame()
+      @clearGameMessage()
 
   initialize: ->
     @model.on 'end-game', =>
@@ -54,4 +57,7 @@ class window.AppView extends Backbone.View
       @model.get('playerHand').losses++
     @$('.win-count').text('Wins: ' + @model.get('playerHand').wins)
     @$('.loss-count').text('Loss: ' + @model.get('playerHand').losses)
-    @$('.num-cards').append('<div>' + message + '</div>')
+    @$('.game-message').text(message)
+
+  clearGameMessage: ->
+    @$('.game-message').empty()

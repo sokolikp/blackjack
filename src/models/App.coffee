@@ -28,7 +28,8 @@ class window.App extends Backbone.Model
       @get('deck').newDeck()
     @get('playerHand').newRound()
     @get('dealerHand').newRound()
-    @get('playerHand').is21()
+    if @get('playerHand').is21()
+      trigger 'end-game'
 
   determineWinner: () ->
     if @get('playerHand').isBusted()
