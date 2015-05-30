@@ -9,28 +9,23 @@ class window.App extends Backbone.Model
 
     @get('playerHand').on 'busted', ->
       console.log('busted')
-      @newGame(deck)
     , @
 
     @get('dealerHand').on 'busted', ->
       console.log('busted')
-      @newGame(deck)
     , @
 
     @get('playerHand').on 'game-over', ->
       console.log('game over!')
-      @newGame(deck)
     , @
 
     @get('dealerHand').on 'game-over', ->
       console.log('game over!')
-      @newGame(deck)
     , @
 
     @get('playerHand').on 'stand', ->
       if numStands == 0
         @get('dealerHand').at(0).flip()
-        # if(@get('dealerHand').scores()[0] < 17 and @get('dealerHand').scores()[1] < 17)
         @get('dealerHand').hit()
       numStands++
     , @
@@ -38,13 +33,4 @@ class window.App extends Backbone.Model
   newGame: (deck) ->
     @get('playerHand').newRound()
     @get('dealerHand').newRound()
-  #   #begin a new game
-    #console.log 'in new game'
-    # oldPlayerHand =
-    #@get('playerHand').remove()
-    #@get('dealerHand').remove()
-    #@set 'playerHand', deck.dealPlayer()
-    #@set 'dealerHand', deck.dealDealer()
-    # remove oldPlayerHand
-    # remove oldDealerHand
 

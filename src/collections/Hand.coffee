@@ -5,13 +5,13 @@ class window.Hand extends Backbone.Collection
   stands: 0
 
   hit: ->
-    if @scores()[0] < 21 and @stands == 0
+    if @scores()[0] < 21 and @scores[1] != 21 and @stands == 0
       newCard = @deck.pop()
       @add(newCard)
       if @isBusted()
         @trigger 'busted', @
       else if @isDealer
-        if(@scores()[1] < 17 or (@scores()[1] > 17 and @scores()[0] < 17))# or @scores()[0] < 17)
+        if(@scores()[1] < 17 or (@scores()[1] > 21 and @scores()[0] < 17))# or @scores()[0] < 17)
           @hit()
         else
           console.log('in HANDS game over')
@@ -36,10 +36,12 @@ class window.Hand extends Backbone.Collection
     [@minScore(), @minScore() + 10 * @hasAce()]
 
   isBusted: ->
-    # console.log 'I\'b busted and my score is', @scores()
     if @scores()[0] > 21 then true else false
 
   newRound: ->
-    # debugger
-    console.log('in new Round')
-    @models = [@deck.pop(), @deck.pop()]
+    newCard = @deck.pop()
+    if @isDealer then newCard.flip()
+    for i in [0..@length]
+      @remove(@at(0))
+    @add newCard
+    @add @deck.pop()
