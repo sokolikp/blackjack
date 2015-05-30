@@ -5,7 +5,10 @@ class window.Hand extends Backbone.Collection
   stands: 0
 
   hit: ->
-    if @scores()[0] < 21 and @scores[1] != 21 and @stands == 0
+    # console.log 'hit'
+    # console.log @scores()
+    # console.log @stands
+    if @scores()[0] < 21 and @scores()[1] != 21 and @stands == 0
       newCard = @deck.pop()
       @add(newCard)
       if @isBusted()
@@ -14,7 +17,6 @@ class window.Hand extends Backbone.Collection
         if(@scores()[1] < 17 or (@scores()[1] > 21 and @scores()[0] < 17))# or @scores()[0] < 17)
           @hit()
         else
-          console.log('in HANDS game over')
           @trigger 'game-over', @
 
   stand: ->
@@ -29,6 +31,12 @@ class window.Hand extends Backbone.Collection
     score + if card.get 'revealed' then card.get 'value' else 0
   , 0
 
+  currentScore: ->
+    if @scores()[1] <= 21
+      @scores()[1]
+    else
+      @scores()[0]
+
   scores: ->
     # The scores are an array of potential scores.
     # Usually, that array contains one element. That is the only score.
@@ -38,10 +46,22 @@ class window.Hand extends Backbone.Collection
   isBusted: ->
     if @scores()[0] > 21 then true else false
 
+  is21: ->
+    console.log()
+    if @scores()[0] == 21 or @scores[1] == 21
+      console.log('I\'m 21')
+      true
+    else
+      false
+
   newRound: ->
+    @stands = 0
     newCard = @deck.pop()
     if @isDealer then newCard.flip()
     for i in [0..@length]
       @remove(@at(0))
     @add newCard
     @add @deck.pop()
+
+  updateCardCount: ->
+    @trigger 'new-card-count', @

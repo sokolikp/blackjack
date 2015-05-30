@@ -5,11 +5,10 @@ class window.HandView extends Backbone.View
   (<span class="score"></span>)<span class="win-busted"></span></h2>'
 
   initialize: ->
-    @collection.on 'add remove change', =>
-      # console.log('re-rendering')
-
-      @render()
     @render()
+    @collection.on 'add remove change', =>
+      @render()
+      @collection.updateCardCount()
 
   render: ->
     @$el.children().detach()
