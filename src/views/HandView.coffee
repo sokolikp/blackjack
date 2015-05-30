@@ -23,7 +23,4 @@ class window.HandView extends Backbone.View
     )
     @$('.win-busted').text(
       if @collection.isBusted()
-        ' Busted!!1'
-      else if @collection.scores()[0] is 21 or @collection.scores()[1] is 21
-        ' Twenty-one!')
-
+        @collection.winBustedMessage)

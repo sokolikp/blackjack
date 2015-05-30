@@ -3,21 +3,30 @@ class window.Hand extends Backbone.Collection
 
   initialize: (array, @deck, @isDealer) ->
   stands: 0
+  wins: 0
+  losses: 0
+  winBustedMessage: ''
 
   hit: ->
-    # console.log 'hit'
-    # console.log @scores()
-    # console.log @stands
-    if @scores()[0] < 21 and @scores()[1] != 21 and @stands == 0
+    # @isBusted()
+    # @is21()
+    if @isDealer
+      if(@scores()[1] < 17 or (@scores()[1] > 21 and @scores()[0] < 17))
+        # console.log('I\'m hitting and my score is: ', @scores())
+        newCard = @deck.pop()
+        @add(newCard)
+        if not @isBusted()
+          @hit()
+      else
+        @trigger 'game-over', @
+    else if @scores()[0] < 21 and @scores()[1] != 21 and @stands == 0
+      # console.log('Im hitting and my dealer flag is: ', @isDealer)
       newCard = @deck.pop()
       @add(newCard)
-      if @isBusted()
-        @trigger 'busted', @
-      else if @isDealer
-        if(@scores()[1] < 17 or (@scores()[1] > 21 and @scores()[0] < 17))# or @scores()[0] < 17)
-          @hit()
-        else
-          @trigger 'game-over', @
+      @isBusted()
+        # @trigger 'busted', @
+      @is21()
+        # @trigger 'twenty-one', @
 
   stand: ->
     @stands++
@@ -44,12 +53,19 @@ class window.Hand extends Backbone.Collection
     [@minScore(), @minScore() + 10 * @hasAce()]
 
   isBusted: ->
-    if @scores()[0] > 21 then true else false
+    if @scores()[0] > 21
+      # console.log @winBustedMessage
+      @trigger 'busted', @
+      @winBustedMessage = ' Busted!!1'
+      true
+    else
+      false
 
   is21: ->
-    console.log()
     if @scores()[0] == 21 or @scores[1] == 21
-      console.log('I\'m 21')
+      # console.log("I'm 21!")
+      @trigger 'twenty-one', @
+      @winBustedMessage = ' Twenty-One!'
       true
     else
       false
