@@ -2,15 +2,24 @@ class window.Hand extends Backbone.Collection
   model: Card
 
   initialize: (array, @deck, @isDealer) ->
-    # score = 0
+  stands: 0
 
   hit: ->
-    if @scores()[0] <= 21
+    if @scores()[0] < 21 and @stands == 0
       newCard = @deck.pop()
-      if @isBusted() then @trigger 'busted', @
       @add(newCard)
-      newCard
-    # else
+      if @isBusted()
+        @trigger 'busted', @
+      else if @isDealer
+        if(@scores()[1] < 17 or (@scores()[1] > 17 and @scores()[0] < 17))# or @scores()[0] < 17)
+          @hit()
+        else
+          console.log('in HANDS game over')
+          @trigger 'game-over', @
+
+  stand: ->
+    @stands++
+    @trigger 'stand', @
 
   hasAce: -> @reduce (memo, card) ->
     memo or card.get('value') is 1
@@ -29,3 +38,8 @@ class window.Hand extends Backbone.Collection
   isBusted: ->
     # console.log 'I\'b busted and my score is', @scores()
     if @scores()[0] > 21 then true else false
+
+  newRound: ->
+    # debugger
+    console.log('in new Round')
+    @models = [@deck.pop(), @deck.pop()]

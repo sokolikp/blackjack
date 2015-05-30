@@ -2,18 +2,49 @@
 # of containing the game logic directly.
 class window.App extends Backbone.Model
   initialize: ->
+    numStands = 0;
     @set 'deck', deck = new Deck()
     @set 'playerHand', deck.dealPlayer()
     @set 'dealerHand', deck.dealDealer()
 
     @get('playerHand').on 'busted', ->
-      console.log 'Im in busted'
-      @set 'playerHand', deck.dealPlayer()
-      # console.log(@get('playerHand'))
-      @set 'dealerHand', deck.dealDealer()
-      # console.log(@get('dealerHand'))
+      console.log('busted')
+      @newGame(deck)
     , @
 
-    # @get 'playerHand'.addEventListener 'busted', (e) =>
-    #   this.clickHandler(e)
+    @get('dealerHand').on 'busted', ->
+      console.log('busted')
+      @newGame(deck)
+    , @
+
+    @get('playerHand').on 'game-over', ->
+      console.log('game over!')
+      @newGame(deck)
+    , @
+
+    @get('dealerHand').on 'game-over', ->
+      console.log('game over!')
+      @newGame(deck)
+    , @
+
+    @get('playerHand').on 'stand', ->
+      if numStands == 0
+        @get('dealerHand').at(0).flip()
+        # if(@get('dealerHand').scores()[0] < 17 and @get('dealerHand').scores()[1] < 17)
+        @get('dealerHand').hit()
+      numStands++
+    , @
+
+  newGame: (deck) ->
+    @get('playerHand').newRound()
+    @get('dealerHand').newRound()
+  #   #begin a new game
+    #console.log 'in new game'
+    # oldPlayerHand =
+    #@get('playerHand').remove()
+    #@get('dealerHand').remove()
+    #@set 'playerHand', deck.dealPlayer()
+    #@set 'dealerHand', deck.dealDealer()
+    # remove oldPlayerHand
+    # remove oldDealerHand
 

@@ -8,12 +8,12 @@ class window.Deck extends Backbone.Collection
         suit: Math.floor(card / 13)
 
   dealPlayer: ->
-    console.log 'I\'m dealing a new player hand'
+    # console.log 'I\'m dealing a new player hand'
     new Hand [@pop(), @pop()], @
 
 
   dealDealer: ->
-    console.log 'I\'m dealing a new dealer hand'
+    # console.log 'I\'m dealing a new dealer hand'
     new Hand [@pop().flip(), @pop()], @, true
 
   # shuffle: -> @.shuffle()
