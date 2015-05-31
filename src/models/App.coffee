@@ -18,6 +18,8 @@ class window.App extends Backbone.Model
 
     @get('playerHand').on 'stand', =>
       if @get('playerHand').stands == 1 and not @gameOver
+        # setTimeout(@get('dealerHand').at(0).flip.bind(@), 100)
+        # @dealDealer()
         @get('dealerHand').at(0).flip()
         @get('dealerHand').hit()
       # numStands++
@@ -30,6 +32,12 @@ class window.App extends Backbone.Model
     @get('dealerHand').newRound()
     if @get('playerHand').is21()
       trigger 'end-game'
+
+  # dealDealer: () ->
+  #   # console.log 'dealing dealer'
+  #   setTimeout =>
+  #     @get('dealerHand').at(0).flip()
+  #   , 100
 
   determineWinner: () ->
     if @get('playerHand').isBusted()

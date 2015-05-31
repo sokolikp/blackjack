@@ -10,6 +10,7 @@ class window.Hand extends Backbone.Collection
   hit: ->
     if @isDealer
       if(@scores()[1] < 17 or (@scores()[1] > 21 and @scores()[0] < 17))
+        # @delayDealer(100)
         newCard = @deck.pop()
         @add(newCard)
         if @isBusted()
@@ -32,6 +33,11 @@ class window.Hand extends Backbone.Collection
   stand: ->
     @stands++
     @trigger 'stand', @
+
+  # delayDealer: (time) ->
+  #   start = (new Date).getTime()
+  #   while (new Date).getTime() < start + time
+  #     if not (new Date).getTime() % 100 then console.log 'time'
 
   hasAce: -> @reduce (memo, card) ->
     memo or card.get('value') is 1
